@@ -23,10 +23,13 @@ import java.util.Set;
 public class DataLinksContainer {
     private final Object data;
     private final Set<ResourceField> relationshipFields;
+    private final Set<String> includedRelations;
 
-    public DataLinksContainer(Object data, Set<ResourceField> relationshipFields) {
+    public DataLinksContainer(Object data, Set<ResourceField> relationshipFields, Set<String> includedRelations) {
         this.data = data;
         this.relationshipFields = relationshipFields;
+        this.includedRelations = includedRelations;
+        
     }
 
     public Object getData() {
@@ -37,6 +40,10 @@ public class DataLinksContainer {
         return relationshipFields;
     }
 
+    public Set<String> getIncludedRelations(){
+    	return includedRelations;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

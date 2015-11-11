@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.katharsis.jackson.exception.JsonSerializationException;
+import io.katharsis.queryParams.include.Inclusion;
 import io.katharsis.queryParams.params.IncludedFieldsParams;
 import io.katharsis.queryParams.params.IncludedRelationsParams;
 import io.katharsis.queryParams.params.TypedParams;
@@ -20,7 +21,7 @@ import io.katharsis.utils.PropertyUtils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -52,20 +53,38 @@ public class ContainerSerializer extends JsonSerializer<Container> {
             gen.writeStartObject();
 
             TypedParams<IncludedFieldsParams> includedFields = value.getResponse()
-                .getQueryParams()
-                .getIncludedFields();
-            String elementName = value.getResponse()
-                .getJsonPath()
-                .getElementName();
+                    .getQueryParams()
+                    .getIncludedFields();
+                String elementName = value.getResponse()
+                    .getJsonPath()
+                    .getElementName();
             IncludedFieldsParams includedTypeFields = findIncludedFields(includedFields, elementName);
+            
+            TypedParams<IncludedRelationsParams> includedRelations = value.getResponse().getQueryParams().getIncludedRelations();            
 
-            writeData(gen, value.getData(), includedTypeFields != null ? includedTypeFields.getParams() : null);
+            writeData(gen, value.getData(), includedTypeFields != null ? includedTypeFields.getParams() : null, findIncludedRelations(includedRelations, elementName));
             gen.writeEndObject();
         } else {
             gen.writeObject(null);
         }
     }
 
+    private Set<String> findIncludedRelations(TypedParams<IncludedRelationsParams> relationsParams, String elementName) {
+    		Set<String> retval = new HashSet<String>();
+            System.out.println("elementName:" + elementName);
+            if (relationsParams.getParams() != null) {
+            	IncludedRelationsParams relations = relationsParams.getParams().get(elementName);
+            	if(relations != null){
+					for(Inclusion i : relations.getParams()){
+						retval.addAll(i.getPathList());
+            		}
+            	}
+            	
+            }
+            return retval;
+        }    
+
+    
     private IncludedFieldsParams findIncludedFields(TypedParams<IncludedFieldsParams> includedFields, String
         elementName) {
         IncludedFieldsParams includedFieldsParams = null;
@@ -84,7 +103,7 @@ public class ContainerSerializer extends JsonSerializer<Container> {
      * Writes a value. Each serialized container must contain type field whose value is string
      * <a href="http://jsonapi.org/format/#document-structure-resource-types"></a>.
      */
-    private void writeData(JsonGenerator gen, Object data, Set<String> includedFields) throws IOException {
+    private void writeData(JsonGenerator gen, Object data, Set<String> includedFields, Set<String> includedRelations) throws IOException {
         Class<?> dataClass = ClassUtils.getJsonApiResourceClass(data);
         String resourceType = resourceRegistry.getResourceType(dataClass);
 
@@ -108,7 +127,7 @@ public class ContainerSerializer extends JsonSerializer<Container> {
         }
 
         Set<ResourceField> relationshipFields = getRelationshipFields(resourceInformation, includedFields);
-        writeRelationshipFields(gen, data, relationshipFields);
+        writeRelationshipFields(gen, data, relationshipFields, includedRelations);
         writeLinksField(gen, data);
     }
 
@@ -154,9 +173,9 @@ public class ContainerSerializer extends JsonSerializer<Container> {
         return includedFields == null || includedFields.isEmpty() || includedFields.contains(attributeField.getName());
     }
 
-    private void writeRelationshipFields(JsonGenerator gen, Object data, Set<ResourceField> relationshipFields)
+    private void writeRelationshipFields(JsonGenerator gen, Object data, Set<ResourceField> relationshipFields, Set<String> includedRelations)
         throws IOException {
-        DataLinksContainer dataLinksContainer = new DataLinksContainer(data, relationshipFields);
+        DataLinksContainer dataLinksContainer = new DataLinksContainer(data, relationshipFields, includedRelations);
         gen.writeObjectField(RELATIONSHIPS_FIELD_NAME, dataLinksContainer);
     }
 
