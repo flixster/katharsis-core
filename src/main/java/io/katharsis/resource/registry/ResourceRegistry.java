@@ -40,6 +40,17 @@ public class ResourceRegistry {
         if (registryEntry != null) {
             return registryEntry;
         }
+        else {
+            Class<?> c = clazz.getSuperclass();            
+            while (c != null) {
+              registryEntry = resources.get(c);
+              
+              if(registryEntry != null){
+                  return registryEntry;
+              }
+              c = c.getSuperclass();
+            }
+        }
         throw new ResourceNotFoundInitializationException(clazz.getCanonicalName());
     }
 
