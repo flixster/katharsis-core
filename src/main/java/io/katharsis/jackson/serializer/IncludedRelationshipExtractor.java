@@ -99,11 +99,11 @@ public class IncludedRelationshipExtractor {
         String elementName = response.getJsonPath()
             .getElementName();
         IncludedRelationsParams includedRelationsParams = findInclusions(includedRelations, elementName);
+
         if (includedRelations != null
             && includedRelations.getParams() != null
             && includedRelations.getParams().size() != 0) {
             for (Inclusion inclusion : includedRelationsParams.getParams()) {
-                //noinspection unchecked
                 includedResources.addAll(extractIncludedRelationship(resource, inclusion, response));
             }
         }
@@ -131,7 +131,7 @@ public class IncludedRelationshipExtractor {
             return Collections.EMPTY_SET;
         }
         if (!(response.getJsonPath() instanceof ResourcePath)) { // the first property name is the resource itself
-            pathList = pathList.subList(1, pathList.size());
+        	pathList = pathList.subList(1, pathList.size());
             if (pathList.isEmpty()) {
                 return Collections.EMPTY_SET;
             }
@@ -143,19 +143,19 @@ public class IncludedRelationshipExtractor {
         throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
         Set elements = new HashSet();
 
-        Object property = PropertyUtils.getProperty(resource, pathList.get(0));
-        if (property != null) {
-            if (Iterable.class.isAssignableFrom(property.getClass())) {
-                for (Object o : ((Iterable) property)) {
-                    //noinspection unchecked
-                    elements.add(new Container(o, response));
-                }
-            } else {
-                //noinspection unchecked
-                elements.add(new Container(property, response));
-            }
-        } else {
-            return Collections.emptySet();
+        for(String path : pathList){
+	        Object property = PropertyUtils.getProperty(resource, path);
+	        if (property != null) {
+	            if (Iterable.class.isAssignableFrom(property.getClass())) {
+	                for (Object o : ((Iterable) property)) {
+	                    //noinspection unchecked
+	                    elements.add(new Container(o, response));
+	                }
+	            } else {
+	                //noinspection unchecked
+	                elements.add(new Container(property, response));
+	            }
+	        } 
         }
         return elements;
     }

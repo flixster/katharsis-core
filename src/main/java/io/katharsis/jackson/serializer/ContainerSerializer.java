@@ -71,7 +71,6 @@ public class ContainerSerializer extends JsonSerializer<Container> {
 
     private Set<String> findIncludedRelations(TypedParams<IncludedRelationsParams> relationsParams, String elementName) {
     		Set<String> retval = new HashSet<String>();
-            System.out.println("elementName:" + elementName);
             if (relationsParams.getParams() != null) {
             	IncludedRelationsParams relations = relationsParams.getParams().get(elementName);
             	if(relations != null){
@@ -79,7 +78,6 @@ public class ContainerSerializer extends JsonSerializer<Container> {
 						retval.addAll(i.getPathList());
             		}
             	}
-            	
             }
             return retval;
         }    
