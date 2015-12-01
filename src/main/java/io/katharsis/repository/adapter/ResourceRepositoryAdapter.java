@@ -1,21 +1,14 @@
 package io.katharsis.repository.adapter;
 
 import io.katharsis.queryParams.QueryParams;
-import io.katharsis.repository.LinksRepository;
-import io.katharsis.repository.MetaRepository;
 import io.katharsis.repository.ParametersFactory;
 import io.katharsis.repository.ResourceRepository;
 import io.katharsis.repository.annotations.*;
-import io.katharsis.repository.exception.RepositoryAnnotationNotFoundException;
-import io.katharsis.response.LinksInformation;
-import io.katharsis.response.MetaInformation;
 import io.katharsis.utils.ClassUtils;
 
 import java.io.Serializable;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 
 public class ResourceRepositoryAdapter<T, ID extends Serializable>
     extends RepositoryAdapter<T>
@@ -37,18 +30,7 @@ public class ResourceRepositoryAdapter<T, ID extends Serializable>
         if (findOneMethod == null) {
             findOneMethod = ClassUtils.findMethodWith(implementationObject, annotationType);
         }
-        checkIfNotNull(annotationType, findOneMethod);
-
-        Object[] methodParameters = parametersFactory
-            .buildParameters(new Object[]{id}, findOneMethod.getParameters(), queryParams, annotationType);
-
-        try {
-            return (T) findOneMethod.invoke(implementationObject, methodParameters);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw (RuntimeException)e.getCause();
-        }
+        return invokeOperation(findOneMethod, annotationType, new Object[]{id}, queryParams);
     }
 
     @Override
@@ -57,18 +39,7 @@ public class ResourceRepositoryAdapter<T, ID extends Serializable>
         if (findAllMethod == null) {
             findAllMethod = ClassUtils.findMethodWith(implementationObject, annotationType);
         }
-        checkIfNotNull(annotationType, findAllMethod);
-
-        Parameter[] parametersToResolve = findAllMethod.getParameters();
-        Object[] methodParameters = parametersFactory.buildParameters(parametersToResolve, queryParams);
-
-        try {
-            return (Iterable<T>) findAllMethod.invoke(implementationObject, methodParameters);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw (RuntimeException)e.getCause();
-        }
+        return invokeOperation(findAllMethod, annotationType, new Object[]{}, queryParams);
     }
 
     @Override
@@ -77,18 +48,7 @@ public class ResourceRepositoryAdapter<T, ID extends Serializable>
         if (findAllWithIds == null) {
             findAllWithIds = ClassUtils.findMethodWith(implementationObject, annotationType);
         }
-        checkIfNotNull(annotationType, findAllWithIds);
-
-        Object[] methodParameters = parametersFactory
-            .buildParameters(new Object[]{ids}, findAllWithIds.getParameters(), queryParams, annotationType);
-
-        try {
-            return (Iterable<T>) findAllWithIds.invoke(implementationObject, methodParameters);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw (RuntimeException)e.getCause();
-        }
+        return invokeOperation(findAllWithIds, annotationType, new Object[]{ids}, queryParams);
     }
 
     @Override
@@ -97,18 +57,7 @@ public class ResourceRepositoryAdapter<T, ID extends Serializable>
         if (saveMethod == null) {
             saveMethod = ClassUtils.findMethodWith(implementationObject, annotationType);
         }
-        checkIfNotNull(annotationType, saveMethod);
-
-        Object[] methodParameters = parametersFactory
-            .buildParameters(new Object[]{entity}, saveMethod.getParameters(), annotationType);
-
-        try {
-            return (S) saveMethod.invoke(implementationObject, methodParameters);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw (RuntimeException)e.getCause();
-        }
+        return invokeOperation(saveMethod, annotationType, new Object[]{entity});
     }
 
     @Override
@@ -117,17 +66,6 @@ public class ResourceRepositoryAdapter<T, ID extends Serializable>
         if (deleteMethod == null) {
             deleteMethod = ClassUtils.findMethodWith(implementationObject, annotationType);
         }
-        checkIfNotNull(annotationType, deleteMethod);
-
-        Object[] methodParameters = parametersFactory
-            .buildParameters(new Object[]{id}, deleteMethod.getParameters(), annotationType);
-
-        try {
-            deleteMethod.invoke(implementationObject, methodParameters);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw (RuntimeException)e.getCause();
-        }
+        invokeOperation(deleteMethod, annotationType, new Object[]{id});
     }
 }
