@@ -73,3 +73,7 @@ crashlytics-build.properties
 hs_err_pid*
 
 
+#eclipse
+/.classpath
+/.settings
+/.project
