@@ -15,6 +15,7 @@ import io.katharsis.utils.PropertyUtils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.Set;
 
 /**
  * Serializes a relationship inside of top-level links object
@@ -40,8 +41,18 @@ public class RelationshipContainerSerializer extends JsonSerializer<Relationship
         throws IOException {
         gen.writeStartObject();
         writeLinks(relationshipContainer, gen);
+        
         if (!relationshipContainer.getRelationshipField().isLazy()) {
             writeLinkage(relationshipContainer, gen);
+        }
+        else{
+        	Set<String> includedRelations = relationshipContainer.getDataLinksContainer().getIncludedRelations();
+        	
+        	System.out.println("includedRelations:"+includedRelations);
+       	
+        	if(includedRelations.contains(relationshipContainer.getRelationshipField().getName())){
+        		writeLinkage(relationshipContainer, gen);
+        	}
         }
         gen.writeEndObject();
     }

@@ -41,4 +41,9 @@ public class Inclusion {
     public int hashCode() {
         return path != null ? path.hashCode() : 0;
     }
+    
+    @Override
+    public String toString(){
+    	return this.getClass().getName()+ "@" +(path == null ? "" : path);
+    }
 }

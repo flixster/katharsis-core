@@ -1,5 +1,6 @@
 package io.katharsis.resource.field;
 
+import io.katharsis.queryParams.include.Inclusion;
 import io.katharsis.resource.annotations.JsonApiToMany;
 
 import java.lang.annotation.Annotation;
@@ -80,4 +81,10 @@ public class ResourceField {
     public int hashCode() {
         return Objects.hash(name, type, genericType, annotations);
     }
+    
+    @Override
+    public String toString(){
+    	return this.getClass().getName()+ "@" + type + "," + name;
+    }
+    
 }

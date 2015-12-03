@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.katharsis.jackson.exception.JsonSerializationException;
+import io.katharsis.queryParams.include.Inclusion;
 import io.katharsis.request.dto.Attributes;
 import io.katharsis.resource.field.ResourceField;
 import io.katharsis.resource.information.ResourceInformation;
@@ -17,6 +18,7 @@ import io.katharsis.utils.PropertyUtils;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -46,7 +48,11 @@ public class ContainerSerializer extends JsonSerializer<Container> {
 
         if (value != null && value.getData() != null) {
             gen.writeStartObject();
-            writeData(gen, value.getData(), value.getRequestParams().getIncludedFields());
+            
+            List<String> includedFields = value.getRequestParams().getIncludedFields();
+            List<Inclusion> inclusions = value.getRequestParams().getIncludedRelations();
+            
+            writeData(gen, value.getData(), includedFields, inclusions);
             gen.writeEndObject();
         } else {
             gen.writeObject(null);
@@ -56,8 +62,9 @@ public class ContainerSerializer extends JsonSerializer<Container> {
     /**
      * Writes a value. Each serialized container must contain type field whose value is string
      * <a href="http://jsonapi.org/format/#document-structure-resource-types"></a>.
+     * @param inclusions 
      */
-    private void writeData(JsonGenerator gen, Object data, List<String> includedFields) throws IOException {
+    private void writeData(JsonGenerator gen, Object data, List<String> includedFields, List<Inclusion> inclusions) throws IOException {
         Class<?> dataClass = ClassUtils.getJsonApiResourceClass(data);
         String resourceType = resourceRegistry.getResourceType(dataClass);
 
@@ -81,7 +88,14 @@ public class ContainerSerializer extends JsonSerializer<Container> {
         }
 
         Set<ResourceField> relationshipFields = getRelationshipFields(resourceInformation, includedFields);
-        writeRelationshipFields(gen, data, relationshipFields);
+        Set<String> includedRelations = new HashSet<>();
+        if(inclusions != null){
+        	for(Inclusion i : inclusions){
+        		includedRelations.add(i.getPath());
+        	}
+        }
+        
+        writeRelationshipFields(gen, data, relationshipFields, includedRelations);
         writeLinksField(gen, data);
     }
 
@@ -127,9 +141,9 @@ public class ContainerSerializer extends JsonSerializer<Container> {
         return includedFields == null || includedFields.isEmpty() || includedFields.contains(attributeField.getName());
     }
 
-    private void writeRelationshipFields(JsonGenerator gen, Object data, Set<ResourceField> relationshipFields)
+    private void writeRelationshipFields(JsonGenerator gen, Object data, Set<ResourceField> relationshipFields, Set<String> includedRelationsSet)
         throws IOException {
-        DataLinksContainer dataLinksContainer = new DataLinksContainer(data, relationshipFields);
+        DataLinksContainer dataLinksContainer = new DataLinksContainer(data, relationshipFields, includedRelationsSet);
         gen.writeObjectField(RELATIONSHIPS_FIELD_NAME, dataLinksContainer);
     }
 

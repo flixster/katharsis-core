@@ -1,8 +1,10 @@
 package io.katharsis.response;
 
 import io.katharsis.jackson.serializer.DataLinksContainerSerializer;
+import io.katharsis.queryParams.include.Inclusion;
 import io.katharsis.resource.field.ResourceField;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,10 +25,12 @@ import java.util.Set;
 public class DataLinksContainer {
     private final Object data;
     private final Set<ResourceField> relationshipFields;
+	private Set<String> includedRelations;
 
-    public DataLinksContainer(Object data, Set<ResourceField> relationshipFields) {
+    public DataLinksContainer(Object data, Set<ResourceField> relationshipFields, Set<String> includedRelations) {
         this.data = data;
         this.relationshipFields = relationshipFields;
+        this.includedRelations = includedRelations;
     }
 
     public Object getData() {
@@ -35,6 +39,10 @@ public class DataLinksContainer {
 
     public Set<ResourceField> getRelationshipFields() {
         return relationshipFields;
+    }
+    
+    public Set<String> getIncludedRelations(){
+    	return includedRelations;
     }
 
     @Override
