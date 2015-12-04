@@ -7,15 +7,17 @@ import io.katharsis.queryParams.include.Inclusion;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
 /**
  * Contains a set of parameters passed along with the request.
  */
 public class RequestParams {
-    private JsonNode filters;
+    private Map<String, Object> filters;
     private Map<String, SortingValues> sorting;
     private List<String> grouping;
     private Map<PaginationKeys, Integer> pagination;
@@ -47,12 +49,14 @@ public class RequestParams {
      *
      * @return set of filters sent along with the request
      */
-    public JsonNode getFilters() {
-        return filters != null ? filters.deepCopy() : null;
+    public Map<String, Object> getFilters() {
+    	return filters;
     }
 
     void setFilters(String filters) throws IOException {
-        this.filters = objectMapper.readTree(filters);
+        JsonNode jsonNode = objectMapper.readTree(filters);
+        Map<String, Object> result = objectMapper.convertValue(jsonNode, Map.class);
+        this.filters = result;
     }
 
     /**
