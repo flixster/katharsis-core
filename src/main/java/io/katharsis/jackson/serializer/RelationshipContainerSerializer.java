@@ -47,9 +47,7 @@ public class RelationshipContainerSerializer extends JsonSerializer<Relationship
         }
         else{
         	Set<String> includedRelations = relationshipContainer.getDataLinksContainer().getIncludedRelations();
-        	
-        	System.out.println("includedRelations:"+includedRelations);
-       	
+        	      	
         	if(includedRelations.contains(relationshipContainer.getRelationshipField().getName())){
         		writeLinkage(relationshipContainer, gen);
         	}

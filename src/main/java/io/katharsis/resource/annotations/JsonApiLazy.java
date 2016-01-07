@@ -3,11 +3,11 @@ package io.katharsis.resource.annotations;
 import java.lang.annotation.*;
 
 /**
- * Indicates an association to many values which need to be handled by a separate repository.
+ * Indicates a lazy relationship
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD, ElementType.METHOD})
 @Inherited
-public @interface JsonApiToMany {
+public @interface JsonApiLazy {
 }

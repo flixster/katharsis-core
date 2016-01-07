@@ -1,7 +1,9 @@
 package io.katharsis.resource.field;
 
 import io.katharsis.queryParams.include.Inclusion;
+import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiToMany;
+import io.katharsis.resource.annotations.JsonApiToOne;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -53,15 +55,9 @@ public class ResourceField {
     }
 
     public boolean isLazy() {
-        boolean isLazy = false;
-        Optional<JsonApiToMany> toManyOptional = annotations.stream()
-            .filter(annotation -> annotation.annotationType().equals(JsonApiToMany.class))
-            .map(annotation -> (JsonApiToMany) annotation)
-            .findAny();
-        if (toManyOptional.isPresent()) {
-            isLazy = toManyOptional.get().lazy();
-        }
-        return isLazy;
+        return annotations.stream()
+            .filter(annotation -> annotation.annotationType().equals(JsonApiLazy.class))
+            .findAny().isPresent();
     }
 
     @Override
