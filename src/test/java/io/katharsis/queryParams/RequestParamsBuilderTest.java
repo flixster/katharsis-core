@@ -1,5 +1,6 @@
 package io.katharsis.queryParams;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.katharsis.jackson.exception.ParametersDeserializationException;
 import io.katharsis.queryParams.include.Inclusion;
@@ -32,7 +33,7 @@ public class RequestParamsBuilderTest {
         RequestParams result = sut.buildRequestParams(queryParams);
 
         // THEN
-        assertThat(result.getFilters().get("name").asText()).isEqualTo("John");
+        assertThat(((JsonNode) (result.getFilters().get("name"))).asText()).isEqualTo("John");
     }
 
     @Test
