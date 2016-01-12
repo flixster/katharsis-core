@@ -13,7 +13,7 @@ public class ClassB {
     @JsonApiId
     private Long id;
 
-    @JsonApiToMany(lazy = false)
+    @JsonApiToMany
     private final List<ClassC> classCs;
 
     public ClassB(ClassC classCs) {

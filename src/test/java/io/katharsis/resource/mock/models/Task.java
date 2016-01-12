@@ -16,7 +16,7 @@ public class Task {
     @JsonApiIncludeByDefault
     private Project project;
 
-    @JsonApiToMany(lazy = false)
+    @JsonApiToMany
     private List<Project> projects;
 
     @JsonApiToOne

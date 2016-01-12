@@ -15,7 +15,6 @@ public class User {
 
     private String name;
 
-    @JsonApiToMany(lazy = false)
     @JsonApiIncludeByDefault
     private List<Project> assignedProjects;
 

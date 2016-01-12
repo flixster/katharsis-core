@@ -63,7 +63,7 @@ public class ResourceFieldTest {
 
     private static class WithToManyEagerFieldClass {
 
-        @JsonApiToMany(lazy = false)
+        @JsonApiToMany
         private String value;
     }
 
