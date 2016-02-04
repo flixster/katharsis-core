@@ -9,6 +9,7 @@ import io.katharsis.resource.field.ResourceField;
 import io.katharsis.resource.registry.RegistryEntry;
 import io.katharsis.resource.registry.ResourceRegistry;
 import io.katharsis.response.LinkageContainer;
+import io.katharsis.response.MetaDataEnabledList;
 import io.katharsis.response.RelationshipContainer;
 import io.katharsis.utils.Generics;
 import io.katharsis.utils.PropertyUtils;
@@ -29,6 +30,7 @@ public class RelationshipContainerSerializer extends JsonSerializer<Relationship
     private static final String RELATED_FIELD_NAME = "related";
     private static final String DATA_FIELD_NAME = "data";
     private static final String LINKS_FIELD_NAME = "links";
+    private static final String META_FIELD_NAME = "meta";
 
     private final ResourceRegistry resourceRegistry;
 
@@ -52,7 +54,22 @@ public class RelationshipContainerSerializer extends JsonSerializer<Relationship
         		writeLinkage(relationshipContainer, gen);
         	}
         }
+
+        writeMetaData(relationshipContainer, gen);
+
         gen.writeEndObject();
+    }
+
+    private void writeMetaData(RelationshipContainer relationshipContainer, JsonGenerator gen) throws IOException {
+
+        ResourceField relationshipField = relationshipContainer.getRelationshipField();
+        Object targetDataObj = PropertyUtils
+                .getProperty(relationshipContainer.getDataLinksContainer().getData(), relationshipField.getName());
+
+        if(targetDataObj instanceof MetaDataEnabledList) {
+            gen.writeObjectField(META_FIELD_NAME, ((MetaDataEnabledList)targetDataObj).getMetaInformation());
+        }
+
     }
 
     private void writeLinks(RelationshipContainer relationshipContainer, JsonGenerator gen) throws IOException {
