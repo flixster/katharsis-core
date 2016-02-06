@@ -14,7 +14,8 @@ public interface MetaRepository<T> {
      *
      * @param resources a list of found resource(s)
      * @param requestParams parameters sent along with the request
+     * @param root the top level object
      * @return meta information object
      */
-    MetaInformation getMetaInformation(Iterable<T> resources, RequestParams requestParams);
+    MetaInformation getMetaInformation(Object root, Iterable<T> resources, RequestParams requestParams);
 }

@@ -46,7 +46,7 @@ public interface BaseController {
 
     default MetaInformation getMetaInformation(Object repository, Iterable<?> resources, RequestParams requestParams) {
         if (repository instanceof MetaRepository) {
-            return ((MetaRepository) repository).getMetaInformation(resources, requestParams);
+            return ((MetaRepository) repository).getMetaInformation(repository, resources, requestParams);
         }
         return null;
     }

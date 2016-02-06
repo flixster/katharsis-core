@@ -35,6 +35,7 @@ import java.io.Serializable;
 public interface RelationshipRepository<T, T_ID extends Serializable, D, D_ID extends Serializable> {
 
     int TARGET_TYPE_GENERIC_PARAMETER_IDX = 2;
+    String LIMIT = "Limit";
 
     /**
      * Set a relation defined by a field. targetId parameter can be either in a form of an object or null value,
@@ -94,4 +95,9 @@ public interface RelationshipRepository<T, T_ID extends Serializable, D, D_ID ex
      * @return identifiers of targets of a relation
      */
     Iterable<D> findManyTargets(T_ID sourceId, String fieldName, RequestParams requestParams);
+
+    default Integer getLimit(String fieldName, RequestParams requestParams) {
+        return (requestParams != null && requestParams.getFilters() != null && requestParams.getFilters().containsKey(fieldName + LIMIT) ?
+                (Integer) requestParams.getFilters().get(fieldName + "Limit") : null);
+    }
 }

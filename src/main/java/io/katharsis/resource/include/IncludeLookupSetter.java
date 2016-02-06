@@ -123,7 +123,7 @@ public class IncludeLookupSetter {
                     .getRelationshipRepositoryForClass(relationshipFieldClass, parameterProvider);
             if (relationshipRepositoryForClass != null) {
                 if (Iterable.class.isAssignableFrom(baseRelationshipFieldClass)) {
-                    return ((MetaRepository)relationshipRepositoryForClass).getMetaInformation(Collections.singletonList(relationshipRepositoryForClass), requestParams);
+                    return ((MetaRepository)relationshipRepositoryForClass).getMetaInformation(root, Collections.singletonList(relationshipRepositoryForClass), requestParams);
                 }
             }
         } catch (RelationshipRepositoryNotFoundException e) {
