@@ -96,6 +96,13 @@ public interface RelationshipRepository<T, T_ID extends Serializable, D, D_ID ex
      */
     Iterable<D> findManyTargets(T_ID sourceId, String fieldName, RequestParams requestParams);
 
+    /**
+     * Lookup and pass the limit back if the filter field exists.
+     *
+     * @param fieldName
+     * @param requestParams
+     * @return An Integer object representing the limit.
+     */
     default Integer getLimit(String fieldName, RequestParams requestParams) {
         return (requestParams != null && requestParams.getFilters() != null && requestParams.getFilters().containsKey(fieldName + LIMIT) ?
                 (Integer) requestParams.getFilters().get(fieldName + "Limit") : null);
