@@ -66,7 +66,7 @@ public class RelationshipsResourceGet extends ResourceIncludeField  {
             Iterable<?> targetObjects = relationshipRepositoryForClass
                 .findManyTargets(castedResourceId, elementName, requestParams);
             MetaInformation metaInformation =
-                getMetaInformation(relationshipRepositoryForClass, targetObjects, requestParams);
+                getMetaInformation(relationshipRepositoryForClass, targetObjects, requestParams, castedResourceId);
             LinksInformation linksInformation =
                 getLinksInformation(relationshipRepositoryForClass, targetObjects, requestParams);
             if (targetObjects != null) {
@@ -80,7 +80,7 @@ public class RelationshipsResourceGet extends ResourceIncludeField  {
             @SuppressWarnings("unchecked")
             Object targetObject = relationshipRepositoryForClass.findOneTarget(castedResourceId, elementName, requestParams);
             MetaInformation metaInformation =
-                getMetaInformation(relationshipRepositoryForClass, Collections.singletonList(targetObject), requestParams);
+                getMetaInformation(relationshipRepositoryForClass, Collections.singletonList(targetObject), requestParams, castedResourceId);
             LinksInformation linksInformation =
                 getLinksInformation(relationshipRepositoryForClass, Collections.singletonList(targetObject), requestParams);
             if (targetObject != null) {

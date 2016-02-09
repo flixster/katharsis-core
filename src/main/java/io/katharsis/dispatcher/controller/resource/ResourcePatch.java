@@ -77,7 +77,7 @@ public class ResourcePatch extends ResourceUpsert {
         Object savedResource = resourceRepository.save(resource);
 
         MetaInformation metaInformation =
-            getMetaInformation(resourceRepository, Collections.singletonList(savedResource), requestParams);
+            getMetaInformation(resourceRepository, Collections.singletonList(savedResource), requestParams, idString);
         LinksInformation linksInformation =
             getLinksInformation(resourceRepository, Collections.singletonList(savedResource), requestParams);
 

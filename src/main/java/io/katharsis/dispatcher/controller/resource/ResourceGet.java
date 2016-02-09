@@ -65,7 +65,7 @@ public class ResourceGet extends ResourceIncludeField {
         @SuppressWarnings("unchecked")
         Object entity = resourceRepository.findOne(castedId, requestParams);
         MetaInformation metaInformation =
-            getMetaInformation(resourceRepository, Collections.singletonList(entity), requestParams);
+            getMetaInformation(resourceRepository, Collections.singletonList(entity), requestParams, id );
         LinksInformation linksInformation =
             getLinksInformation(resourceRepository, Collections.singletonList(entity), requestParams);
         includeFieldSetter.setIncludedElements(entity, requestParams, parameterProvider);

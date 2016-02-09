@@ -120,7 +120,7 @@ public abstract class RelationshipsResourceUpsert implements BaseController {
         }
 
         MetaInformation metaInformation =
-            getMetaInformation(resourceRepository, Collections.singletonList(resource), requestParams);
+            getMetaInformation(resourceRepository, Collections.singletonList(resource), requestParams, castedResourceId);
         LinksInformation linksInformation =
             getLinksInformation(resourceRepository, Collections.singletonList(resource), requestParams);
 

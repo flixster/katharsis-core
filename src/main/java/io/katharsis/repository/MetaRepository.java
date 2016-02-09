@@ -1,7 +1,10 @@
 package io.katharsis.repository;
 
 import io.katharsis.queryParams.RequestParams;
+import io.katharsis.request.path.PathIds;
 import io.katharsis.response.MetaInformation;
+
+import java.io.Serializable;
 
 /**
  * An optional interface that can be implemented along with {@link ResourceRepository} or {@link
@@ -17,5 +20,5 @@ public interface MetaRepository<T> {
      * @param root the top level object
      * @return meta information object
      */
-    MetaInformation getMetaInformation(Object root, Iterable<T> resources, RequestParams requestParams);
+    MetaInformation getMetaInformation(Object root, Iterable<T> resources, RequestParams requestParams,  Serializable castedResourceId);
 }

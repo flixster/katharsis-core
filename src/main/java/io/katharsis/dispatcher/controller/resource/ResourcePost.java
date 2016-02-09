@@ -80,7 +80,7 @@ public class ResourcePost extends ResourceUpsert {
         @SuppressWarnings("unchecked")
         Object savedResourceWithRelations = resourceRepository.findOne(resourceId, requestParams);
         MetaInformation metaInformation =
-            getMetaInformation(resourceRepository, Collections.singletonList(savedResourceWithRelations), requestParams);
+            getMetaInformation(resourceRepository, Collections.singletonList(savedResourceWithRelations), requestParams, null);
         LinksInformation linksInformation =
             getLinksInformation(resourceRepository, Collections.singletonList(savedResourceWithRelations), requestParams);
 

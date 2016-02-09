@@ -105,7 +105,7 @@ public class FieldResourcePost extends ResourceUpsert {
             relationshipRepositoryForClass.setRelation(parent, resourceId, jsonPath.getElementName());
         }
         MetaInformation metaInformation = getMetaInformation(resourceRepository,
-            Collections.singletonList(savedResourceWithRelations), requestParams);
+            Collections.singletonList(savedResourceWithRelations), requestParams, null);
         LinksInformation linksInformation =
             getLinksInformation(resourceRepository, Collections.singletonList(savedResourceWithRelations), requestParams);
 

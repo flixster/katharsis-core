@@ -7,12 +7,14 @@ import io.katharsis.repository.RepositoryMethodParameterProvider;
 import io.katharsis.repository.ResourceRepository;
 import io.katharsis.request.dto.RequestBody;
 import io.katharsis.request.path.JsonPath;
+import io.katharsis.request.path.PathIds;
 import io.katharsis.resource.exception.RequestBodyException;
 import io.katharsis.resource.registry.RegistryEntry;
 import io.katharsis.response.BaseResponse;
 import io.katharsis.response.LinksInformation;
 import io.katharsis.response.MetaInformation;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -44,9 +46,9 @@ public interface BaseController {
      */
     BaseResponse<?> handle(JsonPath jsonPath, RequestParams requestParams, RepositoryMethodParameterProvider parameterProvider, RequestBody requestBody) throws Exception;
 
-    default MetaInformation getMetaInformation(Object repository, Iterable<?> resources, RequestParams requestParams) {
+    default MetaInformation getMetaInformation(Object repository, Iterable<?> resources, RequestParams requestParams, Serializable castedResourceId) {
         if (repository instanceof MetaRepository) {
-            return ((MetaRepository) repository).getMetaInformation(repository, resources, requestParams);
+            return ((MetaRepository) repository).getMetaInformation(repository, resources, requestParams, castedResourceId);
         }
         return null;
     }

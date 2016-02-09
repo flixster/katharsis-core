@@ -62,7 +62,7 @@ public class CollectionGet extends ResourceIncludeField {
                 containers.add(element);
             }
         }
-        MetaInformation metaInformation = getMetaInformation(resourceRepository, resources, requestParams);
+        MetaInformation metaInformation = getMetaInformation(resourceRepository, resources, requestParams, null);
         LinksInformation linksInformation = getLinksInformation(resourceRepository, resources, requestParams);
 
         return new CollectionResponse(containers, jsonPath, requestParams, metaInformation, linksInformation);
