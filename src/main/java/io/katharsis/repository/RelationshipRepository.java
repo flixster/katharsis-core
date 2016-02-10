@@ -1,5 +1,6 @@
 package io.katharsis.repository;
 
+import io.katharsis.queryParams.PaginationKeys;
 import io.katharsis.queryParams.RequestParams;
 
 import java.io.Serializable;
@@ -36,6 +37,9 @@ public interface RelationshipRepository<T, T_ID extends Serializable, D, D_ID ex
 
     int TARGET_TYPE_GENERIC_PARAMETER_IDX = 2;
     String LIMIT = "Limit";
+    String OFFSET = "offset";
+    Integer DEFAULT_LIMIT = 10;
+    Integer DEFAULT_OFFSET = 0;
 
     /**
      * Set a relation defined by a field. targetId parameter can be either in a form of an object or null value,
@@ -104,7 +108,27 @@ public interface RelationshipRepository<T, T_ID extends Serializable, D, D_ID ex
      * @return An Integer object representing the limit.
      */
     default Integer getLimit(String fieldName, RequestParams requestParams) {
-        return (requestParams != null && requestParams.getFilters() != null && requestParams.getFilters().containsKey(fieldName + LIMIT) ?
-                (Integer) requestParams.getFilters().get(fieldName + "Limit") : null);
+
+        if(requestParams != null) {
+            if(requestParams.getPagination() != null && requestParams.getPagination().containsKey(PaginationKeys.limit)) {
+                return requestParams.getPagination().get(PaginationKeys.limit);
+            } else if(requestParams.getFilters() != null && requestParams.getFilters().containsKey(fieldName + LIMIT)) {
+                return (Integer) requestParams.getFilters().get(fieldName + LIMIT);
+            }
+        }
+        return DEFAULT_LIMIT;
+
     }
+
+    default Integer getOffset(String fieldName, RequestParams requestParams) {
+
+        if (requestParams != null) {
+            if (requestParams.getPagination() != null && requestParams.getPagination().containsKey(PaginationKeys.offset)) {
+                return requestParams.getPagination().get(PaginationKeys.offset);
+            }
+        }
+        return DEFAULT_OFFSET;
+
+    }
+
 }
