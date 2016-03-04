@@ -37,7 +37,6 @@ public interface RelationshipRepository<T, T_ID extends Serializable, D, D_ID ex
 
     int TARGET_TYPE_GENERIC_PARAMETER_IDX = 2;
     String LIMIT = "Limit";
-    String OFFSET = "offset";
     Integer DEFAULT_LIMIT = 10;
     Integer DEFAULT_OFFSET = 0;
 
