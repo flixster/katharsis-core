@@ -33,7 +33,7 @@ public class RequestParamsBuilderTest {
         RequestParams result = sut.buildRequestParams(queryParams);
 
         // THEN
-        assertThat(((JsonNode) (result.getFilters().get("name"))).asText()).isEqualTo("John");
+        assertThat((result.getFilters().get("name"))).isEqualTo("John");
     }
 
     @Test

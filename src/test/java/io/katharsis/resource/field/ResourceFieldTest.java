@@ -1,6 +1,8 @@
 package io.katharsis.resource.field;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.katharsis.resource.annotations.JsonApiIncludeByDefault;
+import io.katharsis.resource.annotations.JsonApiLazy;
 import io.katharsis.resource.annotations.JsonApiToMany;
 import org.junit.Test;
 
@@ -57,6 +59,7 @@ public class ResourceFieldTest {
     private static class WithLazyFieldClass {
 
         @JsonProperty("sth")
+        @JsonApiLazy
         @JsonApiToMany
         private String value;
     }
