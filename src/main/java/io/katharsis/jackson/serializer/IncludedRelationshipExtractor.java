@@ -47,9 +47,9 @@ public class IncludedRelationshipExtractor {
         List<?> includedResources = getIncludedByDefaultResources(resource, 1);
 
         return includedResources
-            .stream()
-            .map(includedResource -> new Container(includedResource, response.getRequestParams()))
-            .collect(Collectors.toList());
+                .stream()
+                .map(includedResource -> new Container(includedResource, response.getRequestParams()))
+                .collect(Collectors.toList());
     }
 
 
@@ -91,7 +91,7 @@ public class IncludedRelationshipExtractor {
     }
 
     private List<?> extractIncludedRelationships(Object resource, BaseResponse response)
-        throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
+            throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
         List<?> includedResources = new LinkedList<>();
         List<Inclusion> includedRelations = response.getRequestParams().getIncludedRelations();
         if (includedRelations != null) {
@@ -104,22 +104,16 @@ public class IncludedRelationshipExtractor {
     }
 
     private Set extractIncludedRelationship(Object resource, Inclusion inclusion, BaseResponse response)
-        throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
+            throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
         List<String> pathList = inclusion.getPathList();
         if (resource == null || pathList.isEmpty()) {
             return Collections.EMPTY_SET;
-        }
-        if (!(response.getJsonPath() instanceof ResourcePath)) { // the first property name is the resource itself
-            pathList = pathList.subList(1, pathList.size());
-            if (pathList.isEmpty()) {
-                return Collections.EMPTY_SET;
-            }
         }
         return getElements(resource, pathList, response);
     }
 
     private Set getElements(Object resource, List<String> pathList, BaseResponse response)
-        throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
+            throws IllegalAccessException, NoSuchMethodException, InvocationTargetException, NoSuchFieldException {
         Set elements = new HashSet();
         if (pathList.isEmpty()) {
             if (resource != null) {
